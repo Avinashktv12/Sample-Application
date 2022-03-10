@@ -3,21 +3,18 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Profile extends BaseModel {
-  public static table = 'sample.profiles'
+  public static table = 'profiles'
   @column({ isPrimary: true })
   public id: number
-
-  @column()
-  public email: string
 
   @column()
   public name: string
 
   @column()
-  public mobilenumber: string
+  public mobile: string
 
   @column()
-  public dob: DateTime
+  public birthDate: DateTime
 
   @column()
   public gender: string
