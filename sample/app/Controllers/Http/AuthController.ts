@@ -14,7 +14,6 @@ export default class AuthController {
         status: 'failed',
       })
     }
-
     return response.redirect('/user/profile')
   }
 
