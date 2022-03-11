@@ -25,6 +25,3 @@ import './profile'
 Route.get('/', async () => {
   return { hello: 'world' }
 })
-
-
-

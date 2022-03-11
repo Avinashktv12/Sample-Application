@@ -5,15 +5,13 @@ import User from 'App/Models/User'
 export default class AuthController {
   public async login({ request, auth }: HttpContextContract) {
     const UsersSchema = schema.create({
-      email: schema.string({ trim: true }, [
-        rules.email()
-      ]),
-      password: schema.string({ trim: true }, [rules.minLength(8)])
+      email: schema.string({ trim: true }, [rules.email()]),
+      password: schema.string({ trim: true }, [rules.minLength(8)]),
     })
     const data = await request.validate({ schema: UsersSchema })
     const { email, password } = data
     try {
-     return await auth.attempt(email, password)
+      return await auth.attempt(email, password)
     } catch (e) {
       return {
         httpStatusCode: '401',
@@ -29,7 +27,7 @@ export default class AuthController {
         rules.email(),
         rules.unique({ table: 'users', column: 'email', caseInsensitive: true }),
       ]),
-      password: schema.string({ trim: true }, [rules.minLength(8)])
+      password: schema.string({ trim: true }, [rules.minLength(8)]),
     })
     const data = await request.validate({ schema: UsersSchema })
     const user = await User.create(data)
