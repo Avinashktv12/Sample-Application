@@ -7,4 +7,4 @@ import Route from '@ioc:Adonis/Core/Route'
     Route.delete('/', 'ProfilesController.destroy').as('destroy')
   })
     .prefix('/user/profile')
-    .as('profile').namespace('App/Controllers/Http');
+    .as('profile').namespace('App/Controllers/Http').middleware(['auth']);
