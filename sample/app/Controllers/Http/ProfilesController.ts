@@ -1,5 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import {validator, schema, rules } from '@ioc:Adonis/Core/Validator'
 import Profile from 'App/Models/profileModel'
 
 export default class ProfilesController {
@@ -21,14 +21,11 @@ export default class ProfilesController {
 
   public async show({params }: HttpContextContract) {
     const ProfileSchema = schema.create({
-      email: schema.string({ trim: true }, [
-        rules.email(),
-        rules.unique({ table: 'profile', column: 'email', caseInsensitive: true }),
-      ]),
+      id: schema.string({ trim: true }),
 
     })
-    const data = await params.validate({ schema: ProfileSchema })
-    const profileSchema = await Profile.findByOrFail('email', data.email)
+    const data = await validator.validate({ schema: ProfileSchema,data:{id:params.id} })
+    const profileSchema = await Profile.findByOrFail('id', data.id)
     return profileSchema;
   }
 

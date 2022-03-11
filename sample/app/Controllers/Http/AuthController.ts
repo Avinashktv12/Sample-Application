@@ -6,15 +6,14 @@ export default class AuthController {
   public async login({ request, auth }: HttpContextContract) {
     const UsersSchema = schema.create({
       email: schema.string({ trim: true }, [
-        rules.email(),
-        rules.unique({ table: 'users', column: 'email', caseInsensitive: true }),
+        rules.email()
       ]),
       password: schema.string({ trim: true }, [rules.minLength(8)])
     })
     const data = await request.validate({ schema: UsersSchema })
     const { email, password } = data
     try {
-      await auth.attempt(email, password)
+     return await auth.attempt(email, password)
     } catch (e) {
       return {
         httpStatusCode: '401',
