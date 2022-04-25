@@ -1,9 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
-import Profile from 'App/Models/profile'
+import Profile from 'App/Models/Profile'
 
 export default class ProfilesController {
-  public async create({ request, response }: HttpContextContract) {
+  public async create({ request }: HttpContextContract) {
     const ProfileSchema = schema.create({
       name: schema.string({ trim: true }, [rules.minLength(3), rules.maxLength(30)]),
       email: schema.string({ trim: true }, [
@@ -16,16 +16,31 @@ export default class ProfilesController {
     })
     const data = await request.validate({ schema: ProfileSchema })
     const profile = await Profile.create(data)
-    return response.json(profile)
+    return profile
   }
 
-  public async show({ response, params }: HttpContextContract) {
-    const profileSchema = await Profile.findByOrFail('email', params.email)
-    return response.json(profileSchema)
+  public async show({ request, params }: HttpContextContract) {
+    const ProfileSchema = schema.create({
+      id: schema.string({ trim: true }),
+    })
+    const data = await request.validate({ schema: ProfileSchema, data: { id: params.id } })
+    const profileSchema = await Profile.findByOrFail('id', data.id)
+    return profileSchema
   }
 
   public async update({ request, response }: HttpContextContract) {
-    const profileSchema = await Profile.findByOrFail('email', request.body().email)
+    const ProfileSchema = schema.create({
+      name: schema.string({ trim: true }, [rules.minLength(3), rules.maxLength(30)]),
+      email: schema.string({ trim: true }, [
+        rules.email(),
+        rules.unique({ table: 'profile', column: 'email', caseInsensitive: true }),
+      ]),
+      gender: schema.string({ trim: true }),
+      mobilenumber: schema.string({ trim: true }, [rules.mobile()]),
+      dob: schema.date({ format: 'DD/MM/YYYY' }),
+    })
+    const data = await request.validate({ schema: ProfileSchema })
+    const profileSchema = await Profile.findByOrFail('email', data.email)
     profileSchema.merge({ ...request.body() })
     try {
       await profileSchema.save()
@@ -34,28 +49,23 @@ export default class ProfilesController {
         .status(403)
         .json({ httpStatusCode: '403', message: 'please verify the ', status: 'failed' })
     }
-    return response.json({
-      httpStatusCode: '200',
-      message: 'updated successfully',
-      status: 'success',
-    })
   }
 
-  public async destroy({ request, response }: HttpContextContract) {
-    const profileSchema = await Profile.findByOrFail('email', request.body().email)
+  public async destroy({ request }: HttpContextContract) {
+    const ProfileSchema = schema.create({
+      email: schema.string({ trim: true }, [
+        rules.email(),
+        rules.unique({ table: 'profile', column: 'email', caseInsensitive: true }),
+      ]),
+    })
+    const data = await request.validate({ schema: ProfileSchema })
+    const profileSchema = await Profile.findByOrFail('email', data.email)
     if (profileSchema) {
       try {
         await profileSchema.delete()
       } catch (e) {
-        return response
-          .status(403)
-          .json({ httpStatusCode: '403', message: 'something went wrong ', status: 'failed' })
+        return { httpStatusCode: '403', message: 'something went wrong ', status: 'failed' }
       }
     }
-    return response.json({
-      httpStatusCode: '200',
-      message: 'deleted successfully',
-      status: 'success',
-    })
   }
 }

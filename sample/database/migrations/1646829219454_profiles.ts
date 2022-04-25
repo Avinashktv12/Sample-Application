@@ -1,15 +1,14 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class Profiles extends BaseSchema {
-  protected tableName = 'sample.profiles'
+  protected tableName = 'profiles'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.string('email').notNullable().unique()
       table.string('name').notNullable()
-      table.string('mobilenumber').notNullable()
-      table.string('dob').notNullable()
+      table.string('mobile').notNullable()
+      table.string('birthDate').notNullable()
       table.string('gender').notNullable()
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

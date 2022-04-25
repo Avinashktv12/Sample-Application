@@ -51,7 +51,7 @@ const authConfig: AuthConfig = {
       tokenProvider: {
         type: 'api',
         driver: 'database',
-        table: 'sample.api_tokens',
+        table: 'api_tokens',
         foreignKey: 'user_id',
       },
 
@@ -87,7 +87,7 @@ const authConfig: AuthConfig = {
         | of the mentioned columns to find their user record.
         |
         */
-        uids: ['username','email'],
+        uids: ['email'],
 
         /*
         |--------------------------------------------------------------------------
@@ -100,7 +100,7 @@ const authConfig: AuthConfig = {
         | that time.
         |
         */
-        model: () => import('App/Models/user'),
+        model: () => import('App/Models/userModel'),
       },
     },
   },

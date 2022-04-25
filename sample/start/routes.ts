@@ -19,28 +19,9 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import './auth'
+import './profile'
 
 Route.get('/', async () => {
   return { hello: 'world' }
 })
-
-Route.group(() => {
-  Route.group(() => {
-    Route.post('/login', 'AuthController.login').as('login')
-    Route.post('/register', 'AuthController.register').as('register')
-    Route.post('/logout', 'AuthController.logout').as('logout')
-  })
-    .prefix('/auth')
-    .as('auth')
-
-  Route.group(() => {
-    Route.get('/:email', 'ProfilesController.show').as('show')
-    Route.post('/', 'ProfilesController.create').as('create')
-    Route.put('/', 'ProfilesController.update').as('update')
-    Route.delete('/', 'ProfilesController.destroy').as('destroy')
-  })
-    .prefix('/user/profile')
-    .as('profile')
-})
-  .namespace('App/Controllers/Http')
-  .as('app')
